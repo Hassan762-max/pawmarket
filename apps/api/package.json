@@ -6,11 +6,11 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
-    "build": "nest build",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "prisma db seed",
-    "prisma:reset": "prisma migrate reset --force",
+    "build": "npx nest build",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:seed": "npx prisma db seed",
+    "prisma:reset": "npx prisma migrate reset --force",
     "test": "tsx --test test/**/*.test.ts"
   },
   "prisma": {

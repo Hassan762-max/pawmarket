@@ -1,0 +1,48 @@
+# PawMarket on Render — connect this Blueprint, or copy the build/start commands into each Web Service.
+services:
+  - type: web
+    name: pawmarket-api
+    runtime: node
+    plan: free
+    buildCommand: npm run build:api:render
+    startCommand: npm run start:api:render
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pawmarket-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: DEFAULT_CURRENCY
+        value: PKR
+      - key: ENABLE_SWAGGER
+        value: "false"
+      - key: APP_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: API_URL
+        sync: false
+
+  - type: web
+    name: pawmarket-web
+    runtime: node
+    plan: free
+    buildCommand: npm run build:web:render
+    startCommand: npm run start:web:render
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+
+databases:
+  - name: pawmarket-db
+    plan: free
