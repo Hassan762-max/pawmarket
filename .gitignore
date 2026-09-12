@@ -11,7 +11,9 @@ apps/api/prisma/dev.db-journal
 apps/api/generated
 coverage
 .DS_Store
-uploads
+# uploaded media files only (keep apps/api/src/modules/uploads source)
+/uploads/
+apps/api/uploads/
 credentials.txt
 .tmp-imgs
 .cursor
