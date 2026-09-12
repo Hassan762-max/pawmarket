@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: pawmarket
+          POSTGRES_PASSWORD: pawmarket
+          POSTGRES_DB: pawmarket
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U pawmarket -d pawmarket"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://pawmarket:pawmarket@localhost:5432/pawmarket?schema=public
+      JWT_SECRET: ci-access-secret-min-32-characters!!
+      JWT_REFRESH_SECRET: ci-refresh-secret-min-32-characters!
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+        working-directory: .
+      - run: npx prisma validate
+      - run: npx prisma generate
+      - run: npm run test
+      - run: npm run build
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+        working-directory: .
+      - run: npx tsc --noEmit
+        continue-on-error: true
