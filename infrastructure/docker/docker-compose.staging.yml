@@ -1,0 +1,42 @@
+# Staging-like stack (Postgres + Redis + optional Mailhog)
+# Usage: docker compose -f infrastructure/docker/docker-compose.staging.yml up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pawmarket-stg-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: pawmarket
+      POSTGRES_PASSWORD: ${STAGING_DB_PASSWORD:-pawmarket_stg}
+      POSTGRES_DB: pawmarket_stg
+    volumes:
+      - pawmarket_stg_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pawmarket -d pawmarket_stg"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: pawmarket-stg-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - pawmarket_stg_redis:/data
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: pawmarket-stg-mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+volumes:
+  pawmarket_stg_pg:
+  pawmarket_stg_redis:

@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pawmarket-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pawmarket
+      POSTGRES_PASSWORD: pawmarket
+      POSTGRES_DB: pawmarket
+    volumes:
+      - pawmarket_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pawmarket -d pawmarket"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: pawmarket-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - pawmarket_redis_data:/data
+
+volumes:
+  pawmarket_pg_data:
+  pawmarket_redis_data:

@@ -1,0 +1,27 @@
+{
+  "name": "pawmarket",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Multi-vendor pet marketplace SaaS",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run start:dev -w @pawmarket/api\" \"npm run dev -w @pawmarket/web\"",
+    "dev:api": "npm run start:dev -w @pawmarket/api",
+    "dev:web": "npm run dev -w @pawmarket/web",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test -w @pawmarket/api",
+    "db:generate": "npm run prisma:generate -w @pawmarket/api",
+    "db:migrate": "npm run prisma:migrate -w @pawmarket/api",
+    "db:seed": "npm run prisma:seed -w @pawmarket/api",
+    "db:reset": "npm run prisma:reset -w @pawmarket/api"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

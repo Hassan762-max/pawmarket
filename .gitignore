@@ -1,0 +1,17 @@
+node_modules
+dist
+.next
+.turbo
+*.log
+.env
+.env.*
+!.env.example
+apps/api/prisma/dev.db
+apps/api/prisma/dev.db-journal
+apps/api/generated
+coverage
+.DS_Store
+uploads
+credentials.txt
+.tmp-imgs
+.cursor
